@@ -187,7 +187,10 @@ export class TooltipManager {
             openPdfAbsolutePathInObsidianOrExternal(
               absPath,
               sourcePath,
-              page
+              page,
+              this.plugin.settings.openPdfLinksInNewTab === false
+                ? false
+                : 'tab'
             );
             this.hideTooltip();
           });

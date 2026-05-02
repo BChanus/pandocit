@@ -34,6 +34,7 @@ export const DEFAULT_SETTINGS: ReferenceListSettings = {
   renderCitations: true,
   renderCitationsReadingMode: true,
   renderLinkCitations: true,
+  openPdfLinksInNewTab: true,
   zoteroApiLibraryType: 'user',
   zoteroApiMergeGroupIds: [],
 };
@@ -61,6 +62,8 @@ export interface ReferenceListSettings {
   renderCitations?: boolean;
   renderCitationsReadingMode?: boolean;
   renderLinkCitations?: boolean;
+  /** PDF du coffre ouverts via citekeys / panneau Zotero : nouvel onglet si true, sinon même zone (vue scindée possible). */
+  openPdfLinksInNewTab?: boolean;
 
   pullFromZotero?: boolean;
   zoteroPort?: string;
@@ -419,5 +422,21 @@ export class ReferenceListSettingsTab extends PluginSettingTab {
             this.plugin.saveSettings();
           });
       });
+
+    new Setting(containerEl)
+      .setName(t('Open PDF links in new tab'))
+      .setDesc(
+        t(
+          'When enabled, vault PDFs opened from citekey tooltips or the Zotero library open in a new tab. When disabled, Obsidian may split the current pane instead.'
+        )
+      )
+      .addToggle((toggle) =>
+        toggle
+          .setValue(this.plugin.settings.openPdfLinksInNewTab !== false)
+          .onChange((value) => {
+            this.plugin.settings.openPdfLinksInNewTab = value;
+            this.plugin.saveSettings();
+          })
+      );
   }
 }

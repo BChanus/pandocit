@@ -5,6 +5,7 @@ import {
   Platform,
   htmlToMarkdown,
 } from 'obsidian';
+import type { PaneType } from 'obsidian';
 
 import { getPath } from './platformAdapter';
 
@@ -36,11 +37,13 @@ export function absolutePathToVaultRelative(absPath: string): string | null {
 /**
  * Ouvre un PDF dans Obsidian (chemin vault relatif + `#page=` si besoin), sans syntaxe
  * wiki `[[…]]`, pour éviter qu’elle apparaisse dans l’UI ; sinon `file://` externe.
+ * @param newLeaf `false` = même groupe de panneaux (souvent vue scindée), `'tab'` ou `true` = nouvel onglet.
  */
 export function openPdfAbsolutePathInObsidianOrExternal(
   absPath: string,
   sourcePath: string,
-  page: number | null | undefined
+  page: number | null | undefined,
+  newLeaf: boolean | PaneType = 'tab'
 ): void {
   const rel = absolutePathToVaultRelative(absPath);
   if (rel) {
@@ -48,7 +51,7 @@ export function openPdfAbsolutePathInObsidianOrExternal(
       page != null && Number.isFinite(page)
         ? `${rel}#page=${page}`
         : rel;
-    app.workspace.openLinkText(linktext, sourcePath, false);
+    app.workspace.openLinkText(linktext, sourcePath, newLeaf);
     return;
   }
   const href =

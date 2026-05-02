@@ -2,7 +2,6 @@ import {
   ItemView,
   Modal,
   Notice,
-  Platform,
   Setting,
   WorkspaceLeaf,
   setIcon,
@@ -11,7 +10,11 @@ import Fuse from 'fuse.js';
 import { langListRaw } from './bib/cslLangList';
 import { matchStoredLanguageToCslLocale } from './bib/zoteroLangNormalize';
 import ReferenceList from './main';
-import { getVaultRoot, insertTextInActiveMarkdownNote } from './helpers';
+import {
+  getVaultRoot,
+  insertTextInActiveMarkdownNote,
+  openPdfAbsolutePathInObsidianOrExternal,
+} from './helpers';
 import { t } from './lang/helpers';
 import {
   displayCitekeyForLibrary,
@@ -681,21 +684,28 @@ export class ZoteroLibraryView extends ItemView {
     return fn;
   }
 
+  /** Absolu ou joint à la racine du coffre si Zotero enregistre un chemin relatif (comme le modal PJ). */
+  private resolveLinkedLocalPathForOpen(input: string): string {
+    const pathMod = getPath();
+    const v = input.trim();
+    if (!v) return '';
+    if (pathMod.isAbsolute(v)) return pathMod.normalize(v);
+    const root = getVaultRoot();
+    if (!root) return v;
+    return pathMod.join(root, v.replace(/^[/\\]+/, ''));
+  }
+
+  /** Comme le tooltip des citekeys : `openLinkText` dans le coffre, sinon `file://`. */
   private openLocalPath(p: string) {
-    if (!Platform.isDesktop) {
-      new Notice(t('Local file open is only available on desktop'));
-      return;
-    }
-    try {
-      const { shell } = require('electron') as {
-        shell: { openPath: (path: string) => Promise<string> };
-      };
-      void shell.openPath(p).then((err: string) => {
-        if (err) new Notice(`${t('Could not open file')}: ${err}`);
-      });
-    } catch {
-      new Notice(t('Could not open file'));
-    }
+    const abs = this.resolveLinkedLocalPathForOpen(p);
+    if (!abs) return;
+    const source = this.plugin.app.workspace.getActiveFile()?.path ?? '';
+    openPdfAbsolutePathInObsidianOrExternal(
+      abs,
+      source,
+      null,
+      this.plugin.settings.openPdfLinksInNewTab === false ? false : 'tab'
+    );
   }
 
   /** Pièces jointes dans la même ligne que méta / actions (compact, icônes). */

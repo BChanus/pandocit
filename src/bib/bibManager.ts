@@ -942,7 +942,10 @@ export class BibManager {
                   openPdfAbsolutePathInObsidianOrExternal(
                     link,
                     file.path,
-                    undefined
+                    undefined,
+                    this.plugin.settings.openPdfLinksInNewTab === false
+                      ? false
+                      : 'tab'
                   );
                 });
               });

@@ -42,6 +42,9 @@ export default {
   'Tooltip delay': 'Tooltip delay',
   'Set the amount of time (in milliseconds) to wait before displaying tooltips.':
     'Set the amount of time (in milliseconds) to wait before displaying tooltips.',
+  'Open PDF links in new tab': 'Open PDF links in new tab',
+  'When enabled, vault PDFs opened from citekey tooltips or the Zotero library open in a new tab. When disabled, Obsidian may split the current pane instead.':
+    'When enabled, vault PDFs opened from citekey tooltips or the Zotero library open in a new tab. When disabled, Obsidian may split the current pane instead.',
   'Validate Pandoc configuration': 'Validate Pandoc configuration',
   Validate: 'Validate',
   'Validation successful': 'Validation successful',

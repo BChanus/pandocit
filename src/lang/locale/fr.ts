@@ -41,6 +41,9 @@ export default {
   'Tooltip delay': 'Délai des infobulles',
   'Set the amount of time (in milliseconds) to wait before displaying tooltips.':
     'Temps d’attente (millisecondes) avant d’afficher une infobulle.',
+  'Open PDF links in new tab': 'Ouvrir les PDF dans un nouvel onglet',
+  'When enabled, vault PDFs opened from citekey tooltips or the Zotero library open in a new tab. When disabled, Obsidian may split the current pane instead.':
+    'Si activé, les PDF du coffre ouverts depuis les infobulles ou le panneau Zotero s’ouvrent dans un nouvel onglet. Sinon, Obsidian peut utiliser une vue scindée.',
   'Validate Pandoc configuration': 'Valider la configuration Pandoc',
   Validate: 'Valider',
   'Validation successful': 'Validation réussie',
