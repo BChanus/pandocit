@@ -227,7 +227,7 @@ export default class ReferenceList extends Plugin {
     this.app.workspace
       .getLeavesOfType(zoteroLibraryViewType)
       .forEach((leaf) => leaf.detach());
-    this.bibManager.destroy();
+    this.bibManager?.destroy();
   }
 
   statusBarIcon: HTMLElement;
@@ -382,8 +382,16 @@ export default class ReferenceList extends Plugin {
 
   async loadSettings() {
     const loaded = await this.loadData();
-    const merged = Object.assign({}, DEFAULT_SETTINGS, loaded) as ReferenceListSettings;
-    const raw = loaded as { zoteroApiMergeGroupId?: number };
+    const safeLoaded =
+      loaded && typeof loaded === 'object'
+        ? (loaded as Record<string, unknown>)
+        : {};
+    const merged = Object.assign(
+      {},
+      DEFAULT_SETTINGS,
+      safeLoaded
+    ) as ReferenceListSettings;
+    const raw = safeLoaded as { zoteroApiMergeGroupId?: number };
     if (
       (!merged.zoteroApiMergeGroupIds || merged.zoteroApiMergeGroupIds.length === 0) &&
       raw.zoteroApiMergeGroupId != null &&
