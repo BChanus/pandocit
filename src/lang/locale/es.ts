@@ -78,10 +78,10 @@ export default {
   'Start Zotero and try again.': 'Abra Zotero e inténtelo de nuevo.',
   'Libraries to include in bibliography':
     'Bibliotecas en la bibliografía',
-  'Please provide the path to your pandoc compatible bibliography file in the Pandoc Reference List plugin settings.':
+  'Please provide the path to your pandoc compatible bibliography file in the PandoCit plugin settings.':
     'Indique la ruta del archivo de bibliografía compatible con Pandoc en los ajustes del plugin.',
   'Refresh bibliography': 'Actualizar bibliografía',
-  'Pandoc reference list settings': 'Ajustes de Pandoc Reference List',
+  'Pandoc reference list settings': 'Ajustes de PandoCit',
   'Unable to load pandoc.wasm; reference list is disabled on this platform.':
     'No se puede cargar pandoc.wasm; la lista de referencias está desactivada en esta plataforma.',
 

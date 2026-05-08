@@ -429,7 +429,7 @@ export default class ReferenceList extends Plugin {
     if (!settings.pathToBibliography && !settings.pullFromZoteroApi) {
       return view?.setMessage(
         t(
-          'Please provide the path to your pandoc compatible bibliography file in the Pandoc Reference List plugin settings.'
+          'Please provide the path to your pandoc compatible bibliography file in the PandoCit plugin settings.'
         )
       );
     }

@@ -1,6 +1,11 @@
-# Pandoc Reference List (Obsidian)
+# PandoCit (Obsidian)
 
 Affiche dans le panneau latéral une liste de références formatée pour chaque clé de citation Pandoc (`[@clef]`) présente dans la note active.
+
+## Installation via BRAT (1 clic)
+
+1. Installer BRAT : [notice et protocole BRAT (1 clic)](https://tfthacker.com/brat-protocol)
+2. Installer ce plugin avec BRAT (depuis le dépôt GitHub) : [Atelier-Recherche/obsidian-pandoc-reference-list](https://github.com/Atelier-Recherche/obsidian-pandoc-reference-list)
 
 ## Fonctionnement
 
@@ -18,7 +23,7 @@ Affiche dans le panneau latéral une liste de références formatée pour chaque
    Choisissez un style dans la liste ou indiquez un fichier `.csl` (chemin ou URL), éventuellement surchargé par le frontmatter de la note (`bibliography`, `csl`, `lang`, etc.).
 
 3. **Afficher le panneau des références**  
-   Palette de commandes : **« Pandoc Reference List : Show reference list »** (selon la langue de l’interface Obsidian) pour ouvrir l’onglet des références dans la barre latérale.
+   Palette de commandes : **« PandoCit : Show reference list »** (selon la langue de l’interface Obsidian) pour ouvrir l’onglet des références dans la barre latérale.
 
 4. **Langue du plugin** *(optionnel)*  
    Dans les réglages du plugin, vous pouvez choisir la langue des libellés (paramètres, notices, panneau latéral dédié).

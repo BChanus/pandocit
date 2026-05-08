@@ -79,10 +79,10 @@ export default {
   'Start Zotero and try again.': 'Start Zotero and try again.',
   'Libraries to include in bibliography':
     'Libraries to include in bibliography',
-  'Please provide the path to your pandoc compatible bibliography file in the Pandoc Reference List plugin settings.':
-    'Please provide the path to your pandoc compatible bibliography file in the Pandoc Reference List plugin settings.',
+  'Please provide the path to your pandoc compatible bibliography file in the PandoCit plugin settings.':
+    'Please provide the path to your pandoc compatible bibliography file in the PandoCit plugin settings.',
   'Refresh bibliography': 'Refresh bibliography',
-  'Pandoc reference list settings': 'Pandoc reference list settings',
+  'Pandoc reference list settings': 'PandoCit settings',
   'Unable to load pandoc.wasm; reference list is disabled on this platform.':
     'Unable to load pandoc.wasm; reference list is disabled on this platform.',
   // src/tooltip.ts

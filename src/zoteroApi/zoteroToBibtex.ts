@@ -253,7 +253,7 @@ function itemDataToFields(
 
 export function generateBibtexFromSnapshot(snap: ZoteroStoreSnapshot): string {
   const header =
-    '% Pandoc Reference List — export BibTeX depuis la synchro API Zotero\n' +
+    '% PandoCit — export BibTeX depuis la synchro API Zotero\n' +
     '% Entrées : ouvrages/articles de premier niveau uniquement (pas pièces jointes, notes, corbeille).\n\n';
 
   const usedKeys = new Set<string>();
