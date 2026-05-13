@@ -74,9 +74,10 @@ function formatZoteroWriteError(err: string | undefined): string {
 
 const fuseOpts = {
   keys: [
-    { name: 'title', weight: 0.45 },
-    { name: 'citekey', weight: 0.45 },
-    { name: 'key', weight: 0.1 },
+    { name: 'title', weight: 0.35 },
+    { name: 'citekey', weight: 0.35 },
+    { name: 'tags', weight: 0.25},
+    { name: 'key', weight: 0.05 },
   ],
   threshold: 0.38,
   minMatchCharLength: 1,
@@ -88,6 +89,17 @@ const EMPTY_ZOTERO_SNAPSHOT: ZoteroStoreSnapshot = {
   pendingDeleteKeys: [],
   retryFetchKeys: [],
 };
+
+
+
+function rowTags(st: StoredZoteroItem): string {
+  const d = st.data;
+  const it = String(d.itemType ?? '');
+  if (d.tags.length === 0) return ''
+  return d.tags.join(' ');
+}
+
+
 
 function rowTitle(st: StoredZoteroItem): string {
   const d = st.data;
@@ -227,6 +239,7 @@ export class ZoteroLibraryView extends ItemView {
       key: st.key,
       stored: st,
       title: rowTitle(st),
+      tags: rowTags(st),
       citekey: displayCitekeyForLibrary(d, st.key),
     };
   }
