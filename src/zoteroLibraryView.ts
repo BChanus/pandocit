@@ -38,6 +38,7 @@ type RowFlat = {
   key: string;
   stored: StoredZoteroItem;
   title: string;
+  tags: string;
   citekey: string;
 };
 
@@ -94,9 +95,8 @@ const EMPTY_ZOTERO_SNAPSHOT: ZoteroStoreSnapshot = {
 
 function rowTags(st: StoredZoteroItem): string {
   const d = st.data;
-  const it = String(d.itemType ?? '');
-  if (d.tags.length === 0) return ''
-  return d.tags.join(' ');
+  if (d.tags) return d.tags.map(t => t.tag).join(' ');
+  return '';
 }
 
 
