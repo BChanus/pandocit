@@ -76,8 +76,8 @@ function formatZoteroWriteError(err: string | undefined): string {
 const fuseOpts = {
   keys: [
     { name: 'title', weight: 0.35 },
-    { name: 'citekey', weight: 0.35 },
-    { name: 'tags', weight: 0.25},
+    { name: 'citekey', weight: 0.20 },
+    { name: 'tags', weight: 0.30},
     { name: 'key', weight: 0.05 },
   ],
   threshold: 0.38,
