@@ -126,6 +126,8 @@ export class ZoteroLibraryView extends ItemView {
   private treeRoots: ItemTreeNode[] = [];
   /** Pièces jointes par clé parent (vue liste / recherche plate) */
   private attachmentChildrenByParent = new Map<string, StoredZoteroItem[]>();
+  /** Annotation par clé parent */
+  private annotationChildrenByParent = new Map<string, StoredZoteroItem[]>();
 
   constructor(leaf: WorkspaceLeaf, plugin: ReferenceList) {
     super(leaf);
@@ -270,15 +272,54 @@ export class ZoteroLibraryView extends ItemView {
     }
     for (const [pid, list] of byParent) {
       const atts = list.filter(
-        (k) => String(k.data.itemType) === 'attachment'
+        (k) => String(k.data.itemType) === 'annotation' || 1 === 1
       );
       if (atts.length) this.attachmentChildrenByParent.set(pid, atts);
     }
     for (const [pid, list] of byParentTrash) {
       const atts = list.filter(
-        (k) => String(k.data.itemType) === 'attachment'
+        (k) => String(k.data.itemType) === 'annotation'
       );
       if (atts.length) this.attachmentChildrenByParent.set(pid, atts);
+    }
+  }
+
+
+  /** Annotation pour les pdf */
+  private fillAnnotationMapFromSnap(snap: ZoteroStoreSnapshot): void {
+    const trashedItems: StoredZoteroItem[] = [];
+    const active: StoredZoteroItem[] = [];
+    for (const st of Object.values(snap.items)) {
+      if (st.data.deleted === 1) trashedItems.push(st);
+      else active.push(st);
+    }
+    const byParent = new Map<string, StoredZoteroItem[]>();
+    const byParentTrash = new Map<string, StoredZoteroItem[]>();
+    for (const st of active) {
+      const pid = st.data.parentItem;
+      if (typeof pid === 'string') {
+        if (!byParent.has(pid)) byParent.set(pid, []);
+        byParent.get(pid)!.push(st);
+      }
+    }
+    for (const st of trashedItems) {
+      const pid = st.data.parentItem;
+      if (typeof pid === 'string') {
+        if (!byParentTrash.has(pid)) byParentTrash.set(pid, []);
+        byParentTrash.get(pid)!.push(st);
+      }
+    }
+    for (const [pid, list] of byParent) {
+      const atts = list.filter(
+        (k) => String(k.data.itemType) === 'annotation'
+      );
+      if (atts.length) this.annotationChildrenByParent.set(pid, atts);
+    }
+    for (const [pid, list] of byParentTrash) {
+      const atts = list.filter(
+        (k) => String(k.data.itemType) === 'annotation'
+      );
+      if (atts.length) this.annotationChildrenByParent.set(pid, atts);
     }
   }
 
@@ -359,7 +400,7 @@ export class ZoteroLibraryView extends ItemView {
       const d = st.data as Record<string, unknown>;
       const kidsRaw = (byParent.get(st.key) ?? []).sort(sortSt);
       const inlineAttachments = kidsRaw.filter(
-        (k) => String(k.data.itemType) === 'attachment'
+        (k) => String(k.data.itemType) === 'annotation'
       );
       const treeKids = kidsRaw.filter(
         (k) => !CHILD_TYPES_NOT_IN_TREE.has(String(k.data.itemType))
@@ -381,7 +422,7 @@ export class ZoteroLibraryView extends ItemView {
       const d = st.data as Record<string, unknown>;
       const kidsRaw = (byParentTrash.get(st.key) ?? []).sort(sortSt);
       const inlineAttachments = kidsRaw.filter(
-        (k) => String(k.data.itemType) === 'attachment'
+        (k) => String(k.data.itemType) === 'annotation'
       );
       const treeKids = kidsRaw.filter(
         (k) => !CHILD_TYPES_NOT_IN_TREE.has(String(k.data.itemType))
@@ -466,6 +507,9 @@ export class ZoteroLibraryView extends ItemView {
 
     this.attachmentChildrenByParent.clear();
     this.fillAttachmentMapFromSnap(snapMerged);
+
+    this.annotationChildrenByParent.clear();
+    this.fillAnnotationMapFromSnap(snapMerged);
 
     let collNames = new Map<string, string>();
     try {
@@ -764,6 +808,7 @@ export class ZoteroLibraryView extends ItemView {
     if (!hasPdf || !attachments?.length) return;
 
     for (const att of attachments) {
+      const anns = this.annotationChildrenByParent.get(att.key);
       const links = resolveAttachmentLinks(att, this.zoteroSelectUri(att.key));
       const group = strip.createDiv({ cls: 'pwc-zotero-library__pdf-group' });
       const typeIc = group.createSpan({
@@ -823,6 +868,47 @@ export class ZoteroLibraryView extends ItemView {
           });
         }
       }
+     if (anns) {
+	const innerGroup = group.createDiv({ cls: 'pwc-zotero-library__pdf-group', attr:{'style': "width:100%"}});
+        const sumAnno = innerGroup.createEl('details', {
+          cls: 'pwc-zotero-library__details',
+        });
+        sumAnno.open = false;
+        sumAnno.createEl('summary', {
+          cls: 'pwc-zotero-library__summary',
+          text: t('Annotations'),
+        });
+        const innerAnno = sumAnno.createDiv({ cls: 'pwc-zotero-library__details-inner' });
+	for (const ann of anns){
+	  const annoText = ann.data.annotationText;
+	  const annoComment = ann.data.annotationComment;
+	  const elAnno = innerAnno.createEl('li', {text:annoText});
+	  if (annoText) {
+            const insertBtnAnno = elAnno.createEl('button', {
+              cls: 'clickable-icon',
+              attr: {
+                type: 'button',
+                'aria-label': t('Insert annotation'),
+                title: t('Insert annotation'),
+                    },
+             });
+	     let annoCite: string  = "\n>"+annoText;
+	     if (annoComment) annoCite += '\n\n'+annoComment;
+             setIcon(insertBtnAnno, 'quote-glyph');
+             insertBtnAnno.addEventListener('click', () => {
+             if (
+                insertTextInActiveMarkdownNote(
+                  this.plugin.app,
+                  `${annoCite}`
+                 )
+               ) {
+             return;
+             }
+                new Notice(t('Open a markdown note to insert annotations'));
+            });
+	}
+	}
+     }
     }
   }
 
