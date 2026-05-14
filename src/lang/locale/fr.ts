@@ -136,6 +136,8 @@ export default {
   'No matching references': 'Aucune référence correspondante',
   'Use server copy': 'Utiliser la copie serveur',
   'Insert citekey': 'Insérer la clé',
+  'Insert annotation': "Insérer l'annotation",
+  'Annotations' : 'Annotations',
   'Open a markdown note to insert citations':
     'Ouvrez une note Markdown pour insérer des citations',
   Edit: 'Modifier',

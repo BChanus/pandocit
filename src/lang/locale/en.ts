@@ -140,6 +140,8 @@ export default {
   'No matching references': 'No matching references',
   'Use server copy': 'Use server copy',
   'Insert citekey': 'Insert citekey',
+  'Insert annotation': 'Insert annotation',
+  'Annotations': 'Annotations',
   'Open a markdown note to insert citations':
     'Open a markdown note to insert citations',
   Edit: 'Edit',
